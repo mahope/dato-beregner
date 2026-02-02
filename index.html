@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO -->
+    <title>Dato Beregner - Beregn dage mellem datoer | DatoBeregner.dk</title>
+    <meta name="description" content="Gratis dansk dato beregner. Beregn antal dage mellem to datoer, tilfoej dage til en dato, find ugedag. Perfekt til nedtaelling, projektplanlaegning og deadlines.">
+    <meta name="keywords" content="dato beregner, dage mellem datoer, tilfoej dage, ugedag beregner, dansk kalender, datoberegner, antal dage">
+    <meta name="author" content="Mahope.dk">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dato.holstjensen.eu">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dato.holstjensen.eu">
+    <meta property="og:title" content="Dato Beregner - Beregn dage mellem datoer">
+    <meta property="og:description" content="Gratis vaerktoej til at beregne dage mellem datoer, tilfoeje dage og finde ugedage.">
+    <meta property="og:locale" content="da_DK">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Dato Beregner",
+      "url": "https://dato.holstjensen.eu",
+      "description": "Gratis dansk dato beregner til beregning af dage mellem datoer",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "DKK" }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --muted: #64748b;
+            --accent: #3b82f6;
+            --accent-light: #dbeafe;
+            --success: #22c55e;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        header p {
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Main content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Calculator cards */
+        .calculator {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calculator h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .result {
+            background: var(--accent-light);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .result-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .result-text {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        .result-details {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+
+        /* Quick dates */
+        .quick-dates {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .quick-date {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-date:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        /* Info section */
+        .info {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info h3 {
+            margin-bottom: 1rem;
+        }
+
+        .info ul {
+            padding-left: 1.5rem;
+            color: var(--muted);
+        }
+
+        .info li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            📅 Dato<span>Beregner</span>
+        </div>
+        <p>Beregn dage mellem datoer, tilfoej dage og find ugedage</p>
+    </header>
+
+    <main>
+        <!-- Dage mellem datoer -->
+        <div class="calculator">
+            <h2>📆 Dage mellem to datoer</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date1">Fra dato</label>
+                    <input type="date" id="date1">
+                </div>
+                <div class="form-group">
+                    <label for="date2">Til dato</label>
+                    <input type="date" id="date2">
+                </div>
+                <button class="btn" onclick="calculateDays()">Beregn</button>
+            </div>
+            <div class="result" id="result1" style="display:none;">
+                <div class="result-number" id="daysDiff">0</div>
+                <div class="result-text">dage</div>
+                <div class="result-details" id="daysDetails"></div>
+            </div>
+            <div class="quick-dates">
+                <span class="quick-date" onclick="setQuickDates('today', 'christmas')">Til jul</span>
+                <span class="quick-date" onclick="setQuickDates('today', 'newyear')">Til nytaar</span>
+                <span class="quick-date" onclick="setQuickDates('today', 'summer')">Til sommer</span>
+                <span class="quick-date" onclick="setQuickDates('birthday', 'today')">Siden foedsel</span>
+            </div>
+        </div>
+
+        <!-- Tilfoej/Fratraek dage -->
+        <div class="calculator">
+            <h2>➕ Tilfoej eller fratraek dage</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startDate">Start dato</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="form-group">
+                    <label for="operation">Handling</label>
+                    <select id="operation">
+                        <option value="add">Tilfoej dage</option>
+                        <option value="subtract">Fratraek dage</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="daysCount">Antal dage</label>
+                    <input type="number" id="daysCount" value="30" min="0">
+                </div>
+                <button class="btn" onclick="calculateNewDate()">Beregn</button>
+            </div>
+            <div class="result" id="result2" style="display:none;">
+                <div class="result-number" id="newDate">-</div>
+                <div class="result-text" id="newDateWeekday">-</div>
+            </div>
+            <div class="quick-dates">
+                <span class="quick-date" onclick="addQuickDays(7)">+ 1 uge</span>
+                <span class="quick-date" onclick="addQuickDays(30)">+ 1 maaned</span>
+                <span class="quick-date" onclick="addQuickDays(90)">+ 3 maaneder</span>
+                <span class="quick-date" onclick="addQuickDays(365)">+ 1 aar</span>
+            </div>
+        </div>
+
+        <!-- Ugedag finder -->
+        <div class="calculator">
+            <h2>🗓️ Find ugedag</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="weekdayDate">Vaelg dato</label>
+                    <input type="date" id="weekdayDate">
+                </div>
+                <button class="btn" onclick="findWeekday()">Find ugedag</button>
+            </div>
+            <div class="result" id="result3" style="display:none;">
+                <div class="result-number" id="weekdayResult">-</div>
+                <div class="result-details" id="weekdayDetails"></div>
+            </div>
+        </div>
+
+        <!-- Alder beregner -->
+        <div class="calculator">
+            <h2>🎂 Beregn alder</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthdate">Foedselsdato</label>
+                    <input type="date" id="birthdate">
+                </div>
+                <button class="btn" onclick="calculateAge()">Beregn alder</button>
+            </div>
+            <div class="result" id="result4" style="display:none;">
+                <div class="result-number" id="ageResult">-</div>
+                <div class="result-text">aar gammel</div>
+                <div class="result-details" id="ageDetails"></div>
+            </div>
+        </div>
+
+        <!-- Info section -->
+        <div class="info">
+            <h3>📚 Om Dato Beregner</h3>
+            <ul>
+                <li><strong>Dage mellem datoer:</strong> Beregn praecist antal dage mellem to vilkaarlige datoer</li>
+                <li><strong>Tilfoej/fratraek:</strong> Find en fremtidig eller tidligere dato</li>
+                <li><strong>Ugedag finder:</strong> Find hvilken ugedag en dato falder paa</li>
+                <li><strong>Alder beregner:</strong> Beregn praecis alder i aar, maaneder og dage</li>
+            </ul>
+            <p style="margin-top: 1rem; color: var(--muted); font-size: 0.875rem;">
+                Alle beregninger foretages lokalt i din browser. Vi gemmer ingen data.
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background:#1e293b;color:#94a3b8;padding:2rem 1rem;margin-top:2rem;">
+        <div style="max-width:900px;margin:0 auto;">
+            <h3 style="color:white;font-size:1rem;margin-bottom:1rem;">🛠️ Andre gratis vaerktoejer</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.5rem;margin-bottom:1.5rem;">
+                <a href="https://gratisfaktura.dk" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">📄 Faktura Generator</a>
+                <a href="https://kodeord.dk" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">🔐 Kodeord Generator</a>
+                <a href="https://countdowntimer.dk" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">⏰ Countdown Timer</a>
+                <a href="https://loenberegner.dk" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">💰 Loenberegner</a>
+                <a href="https://minberegner.dk" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">🧮 Alle Beregnere</a>
+                <a href="https://valuta.holstjensen.eu" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">💱 Valuta Omregner</a>
+                <a href="https://enheder.holstjensen.eu" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">📏 Enheder Omregner</a>
+                <a href="https://timer.holstjensen.eu" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">⏱️ Timer/Stopur</a>
+                <a href="https://markdown.holstjensen.eu" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">📝 Markdown Editor</a>
+                <a href="https://lorem.holstjensen.eu" style="color:#94a3b8;text-decoration:none;font-size:0.875rem;">📜 Lorem Ipsum</a>
+            </div>
+            <div style="border-top:1px solid #334155;padding-top:1rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:0.75rem;">
+                <p>&copy; 2025 <a href="https://mahope.dk" style="color:#94a3b8;">Mahope.dk</a></p>
+                <div style="display:flex;gap:1rem;">
+                    <a href="https://privacy.holstjensen.eu" style="color:#94a3b8;">Privatlivspolitik</a>
+                    <a href="mailto:kontakt@mahope.dk" style="color:#94a3b8;">Kontakt</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const weekdays = ['Soendag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Loerdag'];
+        const months = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+
+        // Set default dates
+        const today = new Date();
+        document.getElementById('date1').valueAsDate = today;
+        document.getElementById('date2').valueAsDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        document.getElementById('startDate').valueAsDate = today;
+        document.getElementById('weekdayDate').valueAsDate = today;
+        document.getElementById('birthdate').valueAsDate = new Date(1990, 0, 1);
+
+        function formatDate(date) {
+            return `${date.getDate()}. ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        // Calculate days between dates
+        function calculateDays() {
+            const date1 = new Date(document.getElementById('date1').value);
+            const date2 = new Date(document.getElementById('date2').value);
+            
+            const diffTime = Math.abs(date2 - date1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffWeeks = Math.floor(diffDays / 7);
+            const diffMonths = Math.round(diffDays / 30.44);
+
+            document.getElementById('daysDiff').textContent = diffDays.toLocaleString('da-DK');
+            document.getElementById('daysDetails').innerHTML = `
+                Det er ${diffWeeks} uger og ${diffDays % 7} dage<br>
+                Eller cirka ${diffMonths} maaned${diffMonths !== 1 ? 'er' : ''}
+            `;
+            document.getElementById('result1').style.display = 'block';
+        }
+
+        // Quick date presets
+        function setQuickDates(from, to) {
+            const today = new Date();
+            const year = today.getFullYear();
+            
+            const dates = {
+                today: today,
+                christmas: new Date(year, 11, 24),
+                newyear: new Date(year + 1, 0, 1),
+                summer: new Date(year, 5, 21),
+                birthday: null // Will prompt
+            };
+
+            if (dates.christmas < today) dates.christmas.setFullYear(year + 1);
+            if (dates.summer < today) dates.summer.setFullYear(year + 1);
+
+            if (from === 'birthday') {
+                // Use birthdate from age calculator
+                const birthdate = document.getElementById('birthdate').value;
+                if (birthdate) {
+                    document.getElementById('date1').value = birthdate;
+                } else {
+                    alert('Indtast din foedselsdato i alder-beregneren foerst');
+                    return;
+                }
+            } else {
+                document.getElementById('date1').valueAsDate = dates[from];
+            }
+            
+            document.getElementById('date2').valueAsDate = dates[to] || today;
+            calculateDays();
+        }
+
+        // Calculate new date by adding/subtracting days
+        function calculateNewDate() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const operation = document.getElementById('operation').value;
+            const days = parseInt(document.getElementById('daysCount').value);
+
+            const multiplier = operation === 'add' ? 1 : -1;
+            const newDate = new Date(startDate.getTime() + (days * multiplier * 24 * 60 * 60 * 1000));
+
+            document.getElementById('newDate').textContent = formatDate(newDate);
+            document.getElementById('newDateWeekday').textContent = weekdays[newDate.getDay()];
+            document.getElementById('result2').style.display = 'block';
+        }
+
+        // Quick add days
+        function addQuickDays(days) {
+            document.getElementById('daysCount').value = days;
+            document.getElementById('operation').value = 'add';
+            calculateNewDate();
+        }
+
+        // Find weekday
+        function findWeekday() {
+            const date = new Date(document.getElementById('weekdayDate').value);
+            const weekday = weekdays[date.getDay()];
+            
+            const weekNum = getWeekNumber(date);
+            const isLeapYear = (date.getFullYear() % 4 === 0 && date.getFullYear() % 100 !== 0) || (date.getFullYear() % 400 === 0);
+            const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+
+            document.getElementById('weekdayResult').textContent = weekday;
+            document.getElementById('weekdayDetails').innerHTML = `
+                Uge ${weekNum} | Dag ${dayOfYear} af ${isLeapYear ? 366 : 365}<br>
+                ${isLeapYear ? 'Skudaar' : 'Ikke skudaar'}
+            `;
+            document.getElementById('result3').style.display = 'block';
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // Calculate age
+        function calculateAge() {
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const today = new Date();
+
+            let years = today.getFullYear() - birthdate.getFullYear();
+            let months = today.getMonth() - birthdate.getMonth();
+            let days = today.getDate() - birthdate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const totalDays = Math.floor((today - birthdate) / (1000 * 60 * 60 * 24));
+
+            document.getElementById('ageResult').textContent = years;
+            document.getElementById('ageDetails').innerHTML = `
+                ${years} aar, ${months} maaned${months !== 1 ? 'er' : ''} og ${days} dag${days !== 1 ? 'e' : ''}<br>
+                Det er ${totalDays.toLocaleString('da-DK')} dage i alt
+            `;
+            document.getElementById('result4').style.display = 'block';
+        }
+
+        // Initialize with calculations
+        calculateDays();
+        calculateNewDate();
+        findWeekday();
+        calculateAge();
+    </script>
+</body>
+</html>
